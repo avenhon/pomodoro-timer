@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import Time from "./Time";
 import Session from "./Session";
 
@@ -31,8 +31,11 @@ function Timer() {
     },
   ]);
   const [currentSession, setCurrentSession] = useState<session>(sessions[0]);
+  const intervalRef = useRef(0);
 
   function changeSession(sessionName: string | null) {
+    if (intervalRef.current != 0) clearInterval(intervalRef.current);
+
     let session = sessions.find((session) => session.name === sessionName);
 
     if (!session) {
@@ -43,15 +46,23 @@ function Timer() {
   }
 
   function timerStartHandler() {
-    setInterval(handleTimerChange, 1000);
+    intervalRef.current = setInterval(handleTimerChange, 1000);
   }
 
   function handleTimerChange() {
     setCurrentSession((prevSession) => {
       if (prevSession.seconds === 0) {
-        if (prevSession.minutes === 0) {
+        if (prevSession.minutes === 0 && !prevSession.hours) {
           return { ...prevSession, minutes: 0, seconds: 0 };
+        } else if (prevSession.hours) {
+          return {
+            ...prevSession,
+            hours: prevSession.hours - 1,
+            minutes: 59,
+            seconds: 59,
+          };
         }
+
         return {
           ...prevSession,
           minutes: prevSession.minutes - 1,
