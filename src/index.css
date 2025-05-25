@@ -4,4 +4,16 @@
 
 @theme {
   --font-family: "Roboto Flex", Arial, sans-serif;
+  --components-bg-color: #998888;
+  --text-color: #8a3033;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+  background-color: #eadeda;
 }
