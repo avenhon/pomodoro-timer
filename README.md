@@ -83,12 +83,11 @@ The app comes with three pre-configured sessions:
 ```
 src/
 ├── components/
-│   ├── Timer.tsx          # Main timer component
-│   ├── Session.tsx        # Session management component
-│   └── types/
-│       └── Timer.ts       # TypeScript type definitions
-├── styles/
-│   └── globals.css        # Global styles and CSS variables
+│   ├── Timer.tsx               # Main timer component
+│   ├── Time.tsx                # Time component for timer
+│   ├── Session.tsx             # Session management component
+│   └── SessionCreateModal.tsx  # Session modal creation component
+├── index.css        # Global styles and CSS variables
 └── App.tsx               # Root application component
 ```
 
