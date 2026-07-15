@@ -51,7 +51,7 @@ function Timer() {
     isStarted: false,
   });
   const timerEndSound = new Audio(
-    "https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-69838/zapsplat_multimedia_alert_ping_chime_correct_answer_check_positive_003_70192.mp3"
+    "https://www.soundjay.com/phone_c2026/sounds/telephone-ring-03b.mp3"
   );
   const [isSessionCreationActive, setIsSessionCreationActive] =
     useState<boolean>(false);
