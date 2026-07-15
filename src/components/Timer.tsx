@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Time from "./Time";
 import Session from "./Session";
 import SessionCreateModal from "./SessionCreateModal";
@@ -50,9 +50,23 @@ function Timer() {
     isPaused: false,
     isStarted: false,
   });
-  const timerEndSound = new Audio(
-    "https://www.soundjay.com/phone_c2026/sounds/telephone-ring-03b.mp3"
+  const [timerVolume, setTimerVolume] = useState<number>(
+    Number(localStorage.getItem("volume"))
   );
+  const timerEndSoundRef = useRef<HTMLAudioElement | null>(null);
+
+  if (!timerEndSoundRef.current) {
+    timerEndSoundRef.current = new Audio(
+      "https://www.soundjay.com/phone_c2026/sounds/telephone-ring-03b.mp3"
+    );
+  }
+
+  useEffect(() => {
+    if (timerEndSoundRef.current) {
+      timerEndSoundRef.current.volume = timerVolume;
+    }
+  }, [timerVolume]);
+
   const [isSessionCreationActive, setIsSessionCreationActive] =
     useState<boolean>(false);
 
@@ -104,7 +118,10 @@ function Timer() {
         if (prevSession.minutes === 0 && !prevSession.hours) {
           clearInterval(intervalRef.current);
           timerResetHandler();
-          timerEndSound.play();
+          if (timerEndSoundRef.current) {
+            timerEndSoundRef.current.play();
+            console.log(timerEndSoundRef.current.volume);
+          }
           return { ...prevSession, minutes: 0, seconds: 0 };
         } else if (prevSession.hours) {
           return {
@@ -128,6 +145,11 @@ function Timer() {
       }
     });
   }
+
+  function changeTimerVolume(event: React.ChangeEvent<HTMLInputElement >) {
+    localStorage.setItem("volume", event.target.value);
+    setTimerVolume(Number(event.target.value));
+  } 
 
   return (
     <div className={"flex flex-col items-center justify-center h-full"}>
@@ -159,6 +181,10 @@ function Timer() {
           sessions={sessions}
           setSessions={setSessions}
         />
+      </div>
+      <div>
+        <p className={"font-(family-name:--font-family) text-(--text-color) font-semibold"}>Volume:</p>
+        <input id="volume" type="range" onChange={changeTimerVolume} min={0} max={1} step={0.1} value={timerVolume} />
       </div>
       <Time
         hours={currentSession.hours}
